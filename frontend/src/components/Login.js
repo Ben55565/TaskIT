@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [userName, setuserName] = useState("");
@@ -8,8 +9,8 @@ const Login = () => {
   const [userNameError, setuserNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     setuserNameError(false);
     setPasswordError(false);
@@ -22,7 +23,19 @@ const Login = () => {
     }
 
     if (userName && password) {
-      console.log(userName, password);
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/users/" + userName,
+          {
+            params: {
+              password: password,
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error("There was an error creating the task!", error);
+      }
     }
   };
 

@@ -28,7 +28,7 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/register/create",
+        "http://localhost:8080/api/users",
         user
       );
       console.log(response.data); // Logs the user details
@@ -79,6 +79,7 @@ const RegisterForm = () => {
           variant="outlined"
           color="secondary"
           label="Email"
+          helperText="Invalid email address. Requiered format: aaa@bbb.com"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           fullWidth
