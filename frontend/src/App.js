@@ -1,12 +1,11 @@
 import "./App.css";
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { AppBar, Toolbar } from "@mui/material";
-import { Container } from "@mui/system";
-
-import RegisterForm from "./components/Register";
-import Login from "./components/Login";
+import RegisterForm from "./components/Register/Register";
+import Login from "./components/Login/Login";
+import HomePage from "./components/HomePage/HomePage";
+import Header from "./components/Header/Header";
 
 function App() {
   /*
@@ -17,15 +16,20 @@ function App() {
 
   the first thing i want to do is make a sign up form and make it work with the backend
   */
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <div className="App">
-      <AppBar position="fixed">
-        <Toolbar>TaskIT!</Toolbar>
-      </AppBar>
-      <Container />
+      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+
       <Routes>
-        <Route path="/" element={<RegisterForm />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+        />
       </Routes>
     </div>
   );

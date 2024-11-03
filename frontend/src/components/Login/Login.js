@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 
-const Login = () => {
+const Login = (props) => {
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
   const [userNameError, setuserNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +36,12 @@ const Login = () => {
             },
           }
         );
-        console.log(response.data);
+        if (response.data === "Signed in successfully!") {
+          navigate("/");
+          props.setIsLoggedIn(true);
+        } else {
+          <Alert severity="error">{response.data}</Alert>;
+        }
       } catch (error) {
         console.error("There was an error creating the task!", error);
       }
@@ -72,7 +81,7 @@ const Login = () => {
         </Button>
       </form>
       <small>
-        Need an account? <Link to="/">Register here</Link>
+        Need an account? <Link to="/register">Register here</Link>
       </small>
     </React.Fragment>
   );
