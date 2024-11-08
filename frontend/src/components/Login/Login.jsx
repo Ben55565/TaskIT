@@ -3,9 +3,8 @@ import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
 
-const Login = (props) => {
+const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
   const [userNameError, setuserNameError] = useState(false);
@@ -36,11 +35,27 @@ const Login = (props) => {
             },
           }
         );
-        if (response.data === "Signed in successfully!") {
-          navigate("/");
-          props.setIsLoggedIn(true);
+        if (response.data.result === "Signed in successfully!") {
+          setAlertInfo({
+            show: true,
+            type: "success",
+            message: "Signed in successfully!",
+          });
+          setTimeout(() => {
+            setUser(response.data.user);
+            setAlertInfo({ show: false });
+            setIsLoggedIn(true);
+            navigate("/");
+          }, 3000);
         } else {
-          <Alert severity="error">{response.data}</Alert>;
+          setAlertInfo({
+            show: true,
+            type: "error",
+            message: response.data.result,
+          });
+          setTimeout(() => {
+            setAlertInfo({ show: false });
+          }, 3000);
         }
       } catch (error) {
         console.error("There was an error creating the task!", error);
@@ -49,7 +64,7 @@ const Login = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <div className="form-container">
       <form autoComplete="off" onSubmit={handleSubmit}>
         <h2>Login Form</h2>
         <TextField
@@ -83,7 +98,7 @@ const Login = (props) => {
       <small>
         Need an account? <Link to="/register">Register here</Link>
       </small>
-    </React.Fragment>
+    </div>
   );
 };
 

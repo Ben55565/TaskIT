@@ -6,31 +6,57 @@ import RegisterForm from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import HomePage from "./components/HomePage/HomePage";
 import Header from "./components/Header/Header";
+import Greeting from "./components/Greeting/Greeting";
+import Alerts from "./components/Alerts/Alerts";
+import Footer from "./components/Footer/Footer";
+import Notes from "./components/Notes/Notes";
 
 function App() {
   /*
-  The pages i want to have in my site:
-  1. main page that lets you register or sign in (maybe add memoryless option)
-  2. user settings
-  3. 
-
-  the first thing i want to do is make a sign up form and make it work with the backend
+    importent: currently react refresh states each refresh, i need to set a login using cockies or some other secure way
+    
   */
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+
+  const [user, setUser] = useState(null);
 
   return (
     <div className="App">
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route
-          path="/login"
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+      <div className="content">
+        <Header
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          setAlertInfo={setAlertInfo}
+          user={user}
+          setUser={setUser}
         />
-      </Routes>
+        <Greeting user={user} />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
+                setAlertInfo={setAlertInfo}
+                setUser={setUser}
+              />
+            }
+          />
+          <Route path="/my-notes" element={<Notes />} />
+          <Route path="/recommendations" element={<h1>recommendations</h1>} />
+          <Route path="/Chat" element={<h1>Chat</h1>} />
+        </Routes>
+        <Alerts alertInfo={alertInfo} />
+      </div>
+      <Footer />
     </div>
   );
 }

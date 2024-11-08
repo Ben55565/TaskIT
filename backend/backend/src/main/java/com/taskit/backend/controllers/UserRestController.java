@@ -2,6 +2,7 @@ package com.taskit.backend.controllers;
 
 import com.taskit.backend.dao.UserDAO;
 import com.taskit.backend.entity.User;
+import com.taskit.backend.responses.ResponseData;
 import com.taskit.backend.validations.UserValidations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,17 +41,18 @@ public class UserRestController {
 	}
 	
 	@GetMapping ("/users/{userName}")
-	public String getUser (@PathVariable String userName, @RequestParam String password) {
+	public ResponseData getUser (@PathVariable String userName, @RequestParam String password) {
+		// NOTE TO SELF: NEED TO MAKE IT CASE SENSITIVE
 		User user = userDAO.read(userName);
 		if (user == null){
-			return "No such user exists. Please register";
+			return new ResponseData("No such user exists. Please register.", null);
 		}
 		else{
 			if (Objects.equals(user.getPassword(), password)){
-				return "Signed in successfully!";
+				return new ResponseData("Signed in successfully!", user);
 			}
 		}
-		return "Incorrect password";
+		return new ResponseData("Incorrect password.", null);
 	}
 	
 	@GetMapping ("/users")

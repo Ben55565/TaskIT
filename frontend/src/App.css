@@ -1,0 +1,15 @@
+* {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content {
+  flex: 1;
+}

@@ -31,7 +31,7 @@ const RegisterForm = () => {
         "http://localhost:8080/api/users",
         user
       );
-      console.log(response.data); // Logs the user details
+      console.log(response.data);
     } catch (error) {
       console.error("There was an error creating the task!", error);
     }
