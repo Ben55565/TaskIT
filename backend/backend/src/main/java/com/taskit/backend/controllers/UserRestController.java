@@ -4,7 +4,6 @@ import com.taskit.backend.dao.UserDAO;
 import com.taskit.backend.entity.User;
 import com.taskit.backend.responses.ResponseData;
 import com.taskit.backend.validations.UserValidations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
