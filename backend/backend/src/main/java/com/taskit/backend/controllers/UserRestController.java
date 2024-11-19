@@ -7,8 +7,10 @@ import com.taskit.backend.validations.UserValidations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Objects;
+import java.util.Map;
 
 @RestController
 @RequestMapping ("/api")
@@ -22,19 +24,33 @@ public class UserRestController {
 	}
 	
 	@PostMapping ("/users")
-	public ResponseEntity<String> create (@RequestBody User user) {
+	public ResponseEntity<Map> create (@RequestBody User user) {
 		user.setDateTime();
 		if (UserValidations.isUsernameValid(user.getUsername(), userDAO)) {
 			System.out.println("User already exists. Failed to create new user.");
-			return ResponseEntity.badRequest().body("User already exists. Failed to create new user.");
+			return ResponseEntity
+					.badRequest()
+					.body(Map.of("error", "usernameError"));
 		}
 		else if (!UserValidations.isPhoneNumValid(user.getPhone_number())) {
-			return ResponseEntity.badRequest().body("Phone number invalid. Failed to create new user.");
+			return ResponseEntity
+					.badRequest()
+					.body(Map.of("error", "phonenumError"));
+		}
+		else if (!UserValidations.isEmailValid(user.getEmail())){
+//			return ResponseEntity.badRequest().body("emailError");
+			return ResponseEntity
+					.badRequest()
+					.body(Map.of("error", "emailError"));
+			
 		}
 		else {
 			userDAO.create(user);
 			System.out.println("User created!");
-			return ResponseEntity.ok("User saved at backend, details:\n" + user);
+//			return ResponseEntity.ok("User saved at backend, details:\n" + user);
+			return ResponseEntity
+					.ok()
+					.body(Map.of("error", "emailError"));
 		}
 		
 	}

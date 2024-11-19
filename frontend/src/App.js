@@ -39,7 +39,10 @@ function App() {
         <Greeting user={user} />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterForm />} />
+          <Route
+            path="/register"
+            element={<RegisterForm setAlertInfo={setAlertInfo} />}
+          />
           <Route
             path="/login"
             element={

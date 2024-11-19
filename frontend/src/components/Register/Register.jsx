@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Register.css";
 import axios from "axios";
 
-const RegisterForm = () => {
+const RegisterForm = ({ setAlertInfo }) => {
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setuserName] = useState("");
@@ -12,7 +14,14 @@ const RegisterForm = () => {
   const [phoneNum, setphoneNum] = useState("");
   const [password, setPassword] = useState("");
 
+  const [usernameError, setUsernameError] = useState(false);
+  const [phoneNumError, setPhoneNumError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+
   const handleSubmit = async (e) => {
+    setUsernameError(false);
+    setPhoneNumError(false);
+    setEmailError(false);
     e.preventDefault();
 
     const user = {
@@ -31,9 +40,33 @@ const RegisterForm = () => {
         "http://localhost:8080/api/users",
         user
       );
-      console.log(response.data);
+      console.log(response);
+      setAlertInfo({
+        show: true,
+        type: "success",
+        message: "Created user successfully!",
+      });
+
+      setTimeout(() => {
+        setAlertInfo({ show: false });
+        navigate("/login");
+      }, 3000);
+      console.log(setAlertInfo);
     } catch (error) {
-      console.error("There was an error creating the task!", error);
+      if (error.response) {
+        const errorType = error.response.data?.error;
+        if (errorType === "usernameError") {
+          setUsernameError(true);
+        } else if (errorType === "phonenumError") {
+          setPhoneNumError(true);
+        } else if (errorType === "emailError") {
+          setEmailError(true);
+        }
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error in request setup:", error.message);
+      }
     }
   };
 
@@ -64,6 +97,7 @@ const RegisterForm = () => {
           />
         </Stack>
         <TextField
+          error={usernameError}
           type="text"
           variant="outlined"
           color="secondary"
@@ -75,11 +109,12 @@ const RegisterForm = () => {
           sx={{ mb: 4 }}
         />
         <TextField
-          type="email"
+          error={emailError}
+          type="text"
           variant="outlined"
           color="secondary"
           label="Email"
-          helperText="Invalid email address. Requiered format: aaa@bbb.com"
+          helperText="Required format: aaa@bbb.com"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           fullWidth
@@ -87,10 +122,12 @@ const RegisterForm = () => {
           sx={{ mb: 4 }}
         />
         <TextField
+          error={phoneNumError}
           type="tel"
           variant="outlined"
           color="secondary"
           label="Phone number"
+          helperText="Required format: +xxxxxxxx"
           onChange={(e) => setphoneNum(e.target.value)}
           value={phoneNum}
           fullWidth

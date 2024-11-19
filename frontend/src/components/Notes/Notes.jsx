@@ -6,26 +6,27 @@ import {
   Typography,
   Dialog,
   Button,
-  Slide,
+  Snackbar,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
 } from "@mui/material";
 import NotesController from "../NotesController/NotesController";
+import Fade from "@mui/material/Fade";
 import "./Notes.css";
 
 // in the future use:
 // NotesDrawer - for controlling catarogies of the notes
 // CheckList - for Creating notes that are checklists
 
-// URGENT PROBLEM - FIX THAT ON CREATING A NEW NOTE, AND THEN DISCARDING IT, I CANNOT TOUCH ANYTHING IN THE SITE
-
 const Notes = () => {
   const [notes, setNotes] = useState([
     { id: 1, title: "Note 1", content: "This is the first note" },
   ]);
   const [newNoteFormActive, setNewNoteFormActive] = useState(false);
+
+  const [showSnackBar, setShowSnackBar] = useState(false);
 
   const handleDelete = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
@@ -34,19 +35,6 @@ const Notes = () => {
   const handleEdit = (id) => {
     console.log(`Edit note with ID: ${id}`);
   };
-
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
-  // On add note or edit or anything show the snackbar:
-  /* <Snackbar
-      open={open}
-      autoHideDuration={3000}
-      onClose={handleClose}
-      message="Note Added"
-      action={action}
-    /> */
 
   return (
     <Box>
@@ -68,17 +56,19 @@ const Notes = () => {
         newNoteFormActive={newNoteFormActive}
         setNewNoteFormActive={setNewNoteFormActive}
       />
-      <React.Fragment>
-        <Dialog
-          open={newNoteFormActive}
-          TransitionComponent={Transition}
-          keepMounted
-          disableEnforceFocus
-          onClose={() => {
-            setNewNoteFormActive(false);
-          }}
-          aria-describedby="alert-dialog-slide-description"
-        >
+
+      <Dialog
+        open={newNoteFormActive}
+        TransitionComponent={Fade}
+        keepMounted
+        disablePortal
+        disableBackdropClick
+        onClose={() => {
+          setNewNoteFormActive(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <React.Fragment>
           <DialogTitle>{"Create new note"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
@@ -87,14 +77,23 @@ const Notes = () => {
           </DialogContent>
           <DialogActions>
             <Grid container spacing={2} justifyContent="center">
-              <Button>Add</Button>
+              <Button onClick={() => setShowSnackBar(true)}>Add</Button>
               <Button onClick={() => setNewNoteFormActive(false)}>
                 Discard
               </Button>
             </Grid>
           </DialogActions>
-        </Dialog>
-      </React.Fragment>
+        </React.Fragment>
+      </Dialog>
+      <Snackbar
+        open={showSnackBar}
+        autoHideDuration={3000}
+        onClose={() => {
+          setShowSnackBar(false);
+          setNewNoteFormActive(false);
+        }}
+        message="Note Added"
+      />
     </Box>
   );
 };
