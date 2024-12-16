@@ -35,6 +35,7 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
             },
           }
         );
+        console.log(response);
         if (response.data.result === "Signed in successfully!") {
           setAlertInfo({
             show: true,

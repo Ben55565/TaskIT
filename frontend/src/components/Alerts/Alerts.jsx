@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Alerts.css";
 import { Alert, AlertTitle } from "@mui/material";
 
 const Alerts = ({ alertInfo }) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <div className="alerts">
+    <div
+      className="alerts"
+      style={{
+        position: "fixed",
+        bottom: 10,
+        left: 300,
+        zIndex: 1300,
+      }}
+    >
       {alertInfo.show && (
         <Alert
           severity={alertInfo.type}
           sx={{
             fontWeight: "bold",
             fontSize: 16,
-            width: windowWidth > 900 ? 700 : 400,
+            width: 400,
+            borderRadius: 10,
+            boxShadow: 1,
           }}
         >
           <AlertTitle sx={{ fontWeight: "bold", fontSize: 18 }}>

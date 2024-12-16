@@ -36,11 +36,8 @@ const RegisterForm = ({ setAlertInfo }) => {
     // for example - save there the host "http://localhost:8080" instead of dulicating in each request
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users",
-        user
-      );
-      console.log(response);
+      await axios.post("http://localhost:8080/api/users", user);
+
       setAlertInfo({
         show: true,
         type: "success",
@@ -51,17 +48,31 @@ const RegisterForm = ({ setAlertInfo }) => {
         setAlertInfo({ show: false });
         navigate("/login");
       }, 3000);
-      console.log(setAlertInfo);
     } catch (error) {
       if (error.response) {
         const errorType = error.response.data?.error;
+        let errorMessage;
         if (errorType === "usernameError") {
           setUsernameError(true);
+          errorMessage = "Username is taken. Please choose new username.";
         } else if (errorType === "phonenumError") {
           setPhoneNumError(true);
+          errorMessage =
+            "Phone number is already registered. Please register new number.";
         } else if (errorType === "emailError") {
           setEmailError(true);
+          errorMessage =
+            "Email is already registered. Please register a new email address.";
         }
+        setAlertInfo({
+          show: true,
+          type: "error",
+          message: errorMessage,
+        });
+
+        setTimeout(() => {
+          setAlertInfo({ show: false });
+        }, 3000);
       } else if (error.request) {
         console.error("No response received:", error.request);
       } else {

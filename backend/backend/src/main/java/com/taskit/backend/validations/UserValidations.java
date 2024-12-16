@@ -1,26 +1,27 @@
 package com.taskit.backend.validations;
 
-import com.taskit.backend.dao.UserDAO;
+import com.taskit.backend.service.UserService;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserValidations {
 	
-	public static boolean isUsernameValid(String userName, UserDAO userDAO){
-		return userDAO.isUserExistsByUniqueFields("username", userName) != null;
-		
+	public static boolean isUsernameValid(String userName, UserService userService){
+		return userService.read(userName) != null;
+
 	}
 	
-	public static boolean isEmailValid(String email){
+	public static boolean isEmailValid(String email, UserService userService){
 		Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 		Matcher matcher = pattern.matcher(email);
-		return matcher.find();
+		return matcher.find() && userService.isUserExistsByEmail(email) == null;
 	}
 	
-	public static boolean isPhoneNumValid(String num){
+	public static boolean isPhoneNumValid(String num, UserService userService){
 		Pattern pattern = Pattern.compile("\\+\\d(\\d{7})");
 		Matcher matcher = pattern.matcher(num);
-		return matcher.find();
+		return matcher.find() && userService.isUserExistsByPhoneNum(num) == null;
 	}
 	
 	// Add password validation for strong password
