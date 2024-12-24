@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Stack } from "@mui/material";
+import { TextField, Button, Stack, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.css";
 import axios from "axios";
@@ -83,9 +83,11 @@ const RegisterForm = ({ setAlertInfo }) => {
 
   return (
     <div className="form-container">
-      <h2>Register</h2>
+      <Typography variant="h4" sx={{ m: 4 }}>
+        Sign-up
+      </Typography>
       <form onSubmit={handleSubmit} action={<Link to="/login" />}>
-        <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
+        <Stack spacing={2} direction="row" sx={{ mb: 2 }}>
           <TextField
             type="text"
             variant="outlined"
@@ -117,7 +119,7 @@ const RegisterForm = ({ setAlertInfo }) => {
           value={userName}
           fullWidth
           required
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }}
         />
         <TextField
           error={emailError}
@@ -130,7 +132,7 @@ const RegisterForm = ({ setAlertInfo }) => {
           value={email}
           fullWidth
           required
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }}
         />
         <TextField
           error={phoneNumError}
@@ -142,7 +144,7 @@ const RegisterForm = ({ setAlertInfo }) => {
           onChange={(e) => setphoneNum(e.target.value)}
           value={phoneNum}
           fullWidth
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }}
         />
         <TextField
           type="password"
@@ -153,15 +155,20 @@ const RegisterForm = ({ setAlertInfo }) => {
           value={password}
           required
           fullWidth
-          sx={{ mb: 4 }}
+          sx={{ mb: 2 }}
         />
-        <Button variant="outlined" color="secondary" type="submit">
+        <Button
+          variant="outlined"
+          color="secondary"
+          type="submit"
+          sx={{ mt: 2 }}
+        >
           Register
         </Button>
       </form>
-      <small>
+      <Typography variant="subtitle2" sx={{ m: 4 }}>
         Already have an account? <Link to="/login">Login Here</Link>
-      </small>
+      </Typography>
     </div>
   );
 };

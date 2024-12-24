@@ -20,6 +20,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import { AccountButton } from "../AccountButton/AccountButton";
+import { useTheme } from "@mui/material/styles";
 
 const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
     { label: "Recommendations", to: "/recommendations" },
     { label: "Chat", to: "/chat" },
   ];
+
+  const theme = useTheme();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -111,24 +114,42 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
     { label: "placeHolder 2", onClick: handleCloseUserMenu },
   ];
 
-  const barStyle = { height: 80, justifyContent: "center" };
+  const barStyle = {
+    height: 80,
+    justifyContent: "center",
+    bgcolor: theme.palette.primary.main,
+  };
+
   const appNameStyle = {
     mr: 5,
     display: { xs: "none", md: "flex" },
     fontFamily: "monospace",
     fontWeight: 700,
     letterSpacing: ".3rem",
-    color: "inherit",
+    color: theme.text.primary,
     textDecoration: "none",
+    fontSize: 20,
   };
-  const pagesStyle = { my: 2, color: "white", display: "block", fontSize: 14 };
+
+  const pagesStyle = {
+    my: 2,
+    color: theme.text.primary,
+    display: "block",
+    fontSize: 15,
+    border: 0,
+    fontWeight: 800,
+  };
 
   return (
     <AppBar position="static" sx={barStyle}>
       <Container maxWidth="xxl">
         <Toolbar disableGutters>
           <NoteAltRoundedIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              color: theme.text.primary,
+            }}
           />
           <Typography
             variant="h6"

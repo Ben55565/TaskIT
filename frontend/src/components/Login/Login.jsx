@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +67,9 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
   return (
     <div className="form-container">
       <form autoComplete="off" onSubmit={handleSubmit}>
-        <h2>Login Form</h2>
+        <Typography variant="h4" sx={{ m: 4 }}>
+          Login
+        </Typography>
         <TextField
           label="User Name"
           onChange={(e) => setuserName(e.target.value)}
@@ -75,7 +77,7 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
           variant="outlined"
           color="secondary"
           type="userName"
-          sx={{ mb: 3 }}
+          sx={{ mb: 2 }}
           fullWidth
           value={userName}
           error={userNameError}
@@ -90,15 +92,20 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
           value={password}
           error={passwordError}
           fullWidth
-          sx={{ mb: 3 }}
+          sx={{ mb: 2 }}
         />
-        <Button variant="outlined" color="secondary" type="submit">
+        <Button
+          variant="outlined"
+          color="secondary"
+          type="submit"
+          sx={{ mt: 2 }}
+        >
           Login
         </Button>
       </form>
-      <small>
+      <Typography variant="subtitle2" sx={{ m: 4 }}>
         Need an account? <Link to="/register">Register here</Link>
-      </small>
+      </Typography>
     </div>
   );
 };

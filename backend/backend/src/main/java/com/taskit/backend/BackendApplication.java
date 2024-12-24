@@ -19,10 +19,4 @@ public class BackendApplication {
 		return runner -> System.out.println("Running backend");
 	}
 	
-
-	
-
-	
-
-	
 }

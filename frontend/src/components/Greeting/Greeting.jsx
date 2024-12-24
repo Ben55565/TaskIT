@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Typography, Box } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
-import "./Greeting.css";
-
 const Greeting = ({ user }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [message, setMessage] = useState("Welcome ");
@@ -37,16 +35,20 @@ const Greeting = ({ user }) => {
   }, [user]);
 
   return (
-    <Box className="sub-header">
-      <Typography variant="h4" className="clock">
+    <Box sx={{ pt: 4, textAlign: "center" }}>
+      <Typography
+        variant="body2"
+        className="clock"
+        sx={{ fontWeight: 700, fontSize: 18 }}
+      >
         {currentTime.toLocaleTimeString()}
       </Typography>
-      <Typography variant="h5" className="greeting">
+      <Typography variant="body1" sx={{ fontWeight: 400, pt: 1, pb: 3 }}>
         {user
           ? message
           : "Great to see you! Feel free signing up and experiencing my work!"}
       </Typography>
-      <Box className="test">
+      <Box>
         <Divider orientation="horizontal" flexItem className="test" />
       </Box>
     </Box>

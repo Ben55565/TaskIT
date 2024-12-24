@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping ("/api")
@@ -27,27 +27,18 @@ public class UserRestController {
 	public ResponseEntity<Map> create (@RequestBody User user) {
 		
 		if (userService.read(user.getUsername()) != null) {
-			return ResponseEntity
-					.badRequest()
-					.body(Map.of("error", "usernameError"));
+			return ResponseEntity.badRequest().body(Map.of("error", "usernameError"));
 		}
-		else if (!UserValidations.isPhoneNumValid(user.getPhone_number(), userService)) {
-			return ResponseEntity
-					.badRequest()
-					.body(Map.of("error", "phonenumError"));
+		else if (! UserValidations.isPhoneNumValid(user.getPhone_number(), userService)) {
+			return ResponseEntity.badRequest().body(Map.of("error", "phonenumError"));
 		}
-		else if (!UserValidations.isEmailValid(user.getEmail(), userService)){
-			return ResponseEntity
-					.badRequest()
-					.body(Map.of("error", "emailError"));
+		else if (! UserValidations.isEmailValid(user.getEmail(), userService)) {
+			return ResponseEntity.badRequest().body(Map.of("error", "emailError"));
 		}
 		else {
 			user.setDateTime();
-			userService.createOrUpdate(user);
-			System.out.println("User created!");
-			return ResponseEntity
-					.ok()
-					.body(Map.of("error", "emailError"));
+			User savedUser = userService.createOrUpdate(user);
+			return ResponseEntity.ok().body(Map.of("success", "User created successfully", "username", savedUser.getUsername(), "timestamp", savedUser.getDateTime()));
 		}
 		
 	}
@@ -56,11 +47,11 @@ public class UserRestController {
 	public ResponseData getUser (@PathVariable String userName, @RequestParam String password) {
 		// NOTE TO SELF: NEED TO MAKE IT CASE SENSITIVE
 		User user = userService.read(userName);
-		if (user == null){
+		if (user == null) {
 			return new ResponseData("No such user exists. Please register.", null);
 		}
-		else{
-			if (Objects.equals(user.getPassword(), password)){
+		else {
+			if (Objects.equals(user.getPassword(), password)) {
 				return new ResponseData("Signed in successfully!", user);
 			}
 		}
@@ -77,7 +68,7 @@ public class UserRestController {
 		return ResponseEntity.ok(allUsers);
 	}
 	
-	@PutMapping("/users/{userName}")
+	@PutMapping ("/users/{userName}")
 	private void updateUser (@PathVariable String userName, @RequestBody User user, @RequestParam String field, @RequestParam String newValue) {
 		switch (field) {
 			case "lastname" -> {
@@ -107,7 +98,7 @@ public class UserRestController {
 		
 	}
 	
-	@DeleteMapping("/users/{userName}")
+	@DeleteMapping ("/users/{userName}")
 	private void dropUser (User user) {
 		if (userService.read(user.getUsername()) != null) {
 			System.out.println("Deleting User...");

@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
 
 import RegisterForm from "./components/Register/Register";
 import Login from "./components/Login/Login";
@@ -10,6 +11,8 @@ import Greeting from "./components/Greeting/Greeting";
 import Alerts from "./components/Alerts/Alerts";
 import Footer from "./components/Footer/Footer";
 import Notes from "./components/Notes/Notes";
+
+import { theme } from "./theme";
 
 function App() {
   /*
@@ -27,40 +30,42 @@ function App() {
   const [user, setUser] = useState(null);
 
   return (
-    <div className="App">
-      <div className="content">
-        <Header
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn}
-          setAlertInfo={setAlertInfo}
-          user={user}
-          setUser={setUser}
-        />
-        <Greeting user={user} />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/register"
-            element={<RegisterForm setAlertInfo={setAlertInfo} />}
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <div className="content">
+          <Header
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+            setAlertInfo={setAlertInfo}
+            user={user}
+            setUser={setUser}
           />
-          <Route
-            path="/login"
-            element={
-              <Login
-                setIsLoggedIn={setIsLoggedIn}
-                setAlertInfo={setAlertInfo}
-                setUser={setUser}
-              />
-            }
-          />
-          <Route path="/my-notes" element={<Notes />} />
-          <Route path="/recommendations" element={<h1>recommendations</h1>} />
-          <Route path="/Chat" element={<h1>Chat</h1>} />
-        </Routes>
-        <Alerts alertInfo={alertInfo} />
+          <Greeting user={user} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/register"
+              element={<RegisterForm setAlertInfo={setAlertInfo} />}
+            />
+            <Route
+              path="/login"
+              element={
+                <Login
+                  setIsLoggedIn={setIsLoggedIn}
+                  setAlertInfo={setAlertInfo}
+                  setUser={setUser}
+                />
+              }
+            />
+            <Route path="/my-notes" element={<Notes />} />
+            <Route path="/recommendations" element={<h1>recommendations</h1>} />
+            <Route path="/Chat" element={<h1>Chat</h1>} />
+          </Routes>
+          <Alerts alertInfo={alertInfo} />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ThemeProvider>
   );
 }
 

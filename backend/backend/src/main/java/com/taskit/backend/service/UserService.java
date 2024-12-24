@@ -1,11 +1,12 @@
 package com.taskit.backend.service;
 
 import com.taskit.backend.entity.User;
+
 import java.util.List;
 
 public interface UserService {
 	
-	void createOrUpdate (User user);
+	User createOrUpdate (User user);
 	
 	void delete (String username);
 	

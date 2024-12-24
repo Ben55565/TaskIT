@@ -62,7 +62,7 @@ const Notes = () => {
         TransitionComponent={Fade}
         keepMounted
         disablePortal
-        disableBackdropClick
+        disablebackdropclick
         onClose={() => {
           setNewNoteFormActive(false);
         }}

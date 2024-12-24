@@ -1,7 +1,7 @@
 package com.taskit.backend.service;
 
-import com.taskit.backend.dao.UserRepository;
 import com.taskit.backend.entity.User;
+import com.taskit.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,10 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl (UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
+	
 	@Override
-	public void createOrUpdate (User user) {
-		userRepository.save(user);
+	public User createOrUpdate (User user) {
+		return userRepository.save(user);
 	}
 	
 	@Override

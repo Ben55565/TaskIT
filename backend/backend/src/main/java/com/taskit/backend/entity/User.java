@@ -1,36 +1,39 @@
 package com.taskit.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
 @SuppressWarnings ("ALL")
 @Entity
-@Table(name="user")
+@Table (name = "\"user\"")
 public class User {
 	
 	@Id
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "username")
+	@Column (name = "username")
 	private String username;
-	@Column(name = "email")
+	@Column (name = "email")
 	private String email;
-	@Column(name = "password")
+	@Column (name = "password")
 	private String password;
-	@Column(name = "create_time")
+	@Column (name = "create_time")
 	private LocalDateTime dateTime;
-	@Column(name = "phone_number")
+	@Column (name = "phone_number")
 	private String phone_number;
-	@Column(name = "fname")
+	@Column (name = "fname")
 	private String firstName;
-	@Column(name = "lname")
+	@Column (name = "lname")
 	private String lastName;
 	
-	public User (){
+	public User () {
 	
 	}
 	
-	public User (String firstName, String lastName,String username, String email, String phone_number, String password) {
+	public User (String firstName, String lastName, String username, String email, String phone_number, String password) {
 		
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -99,12 +102,6 @@ public class User {
 	
 	@Override
 	public String toString () {
-		return "User{" + "username='" + username
-				+ '\'' + ", email='" + email
-				+ '\'' + ", password='" + password
-				+ '\'' + ", dateTime=" + dateTime
-				+ ", phone_number='" + phone_number
-				+ '\'' + ", firstName='" + firstName
-				+ '\'' + ", lastName='" + lastName + '\'' + '}';
+		return "User{" + "username='" + username + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + ", dateTime=" + dateTime + ", phone_number='" + phone_number + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + '}';
 	}
 }
