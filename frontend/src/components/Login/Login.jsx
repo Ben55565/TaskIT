@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import API, { setAuthToken } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
@@ -27,16 +27,16 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
 
     if (userName && password) {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/users/" + userName,
-          {
-            params: {
-              password: password,
-            },
-          }
-        );
+        const response = await API.post("/auth/login", {
+          username: userName,
+          password: password,
+        });
         console.log(response);
+
         if (response.data.result === "Signed in successfully!") {
+          const { token } = response.data;
+          localStorage.setItem("token", token);
+          setAuthToken(token);
           setAlertInfo({
             show: true,
             type: "success",

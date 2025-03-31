@@ -45,4 +45,6 @@ public class UserServiceImpl implements UserService {
 	public User isUserExistsByPhoneNum (String data) {
 		return userRepository.findByPhoneNum(data);
 	}
+	
+	
 }

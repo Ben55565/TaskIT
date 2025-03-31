@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 
@@ -11,23 +11,58 @@ import Greeting from "./components/Greeting/Greeting";
 import Alerts from "./components/Alerts/Alerts";
 import Footer from "./components/Footer/Footer";
 import Notes from "./components/Notes/Notes";
+import AlertDialog from "./components/AlertDialog/AlertDialog";
+
+import API, { setAuthToken } from "./api/api";
 
 import { theme } from "./theme";
 
 function App() {
-  /*
-    importent: currently react refresh states each refresh, i need to set a login using cockies or some other secure way
-    
-  */
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [alertInfo, setAlertInfo] = useState({
     show: false,
     type: "",
     message: "",
   });
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setAuthToken(token);
+      console.log(token);
+      API.get("/auth/validate-token", {
+        headers: { Authorization: token },
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.data.valid) {
+            setIsLoggedIn(true);
+            if (res.data.user) {
+              setUser(res.data.user);
+            }
+          } else if (res.data.expired) {
+            localStorage.removeItem("token");
+            setDialogOpen(true);
+            setIsLoggedIn(false);
+          } else {
+            localStorage.removeItem("token");
+            setAuthToken(null);
+            setIsLoggedIn(false);
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          setAuthToken(null);
+          setIsLoggedIn(false);
+        });
+    } else {
+      localStorage.removeItem("token");
+      console.log("No token exists");
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,6 +76,7 @@ function App() {
             setUser={setUser}
           />
           <Greeting user={user} />
+          <AlertDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route
@@ -58,8 +94,8 @@ function App() {
               }
             />
             <Route path="/my-notes" element={<Notes />} />
-            <Route path="/recommendations" element={<h1>recommendations</h1>} />
-            <Route path="/Chat" element={<h1>Chat</h1>} />
+            {/* <Route path="/recommendations" element={<h1>recommendations</h1>} />
+            <Route path="/Chat" element={<h1>Chat</h1>} /> */}
           </Routes>
           <Alerts alertInfo={alertInfo} />
         </div>

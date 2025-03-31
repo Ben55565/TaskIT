@@ -28,8 +28,8 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const pages = [
     { label: "My Notes", to: "/my-notes" },
-    { label: "Recommendations", to: "/recommendations" },
-    { label: "Chat", to: "/chat" },
+    // { label: "Recommendations", to: "/recommendations" },
+    // { label: "Chat", to: "/chat" },
   ];
 
   const theme = useTheme();
@@ -99,6 +99,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
 
     setTimeout(() => {
       setUser(null);
+      localStorage.removeItem("token");
       setAlertInfo({ show: false });
       window.location.reload();
       setIsLoggedIn(false);

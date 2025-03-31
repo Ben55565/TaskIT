@@ -6,6 +6,7 @@ public class ResponseData {
 	
 	private String result;
 	private User user;
+	private String token;
 	
 	public ResponseData () {
 	
@@ -14,6 +15,12 @@ public class ResponseData {
 	public ResponseData (String result, User user) {
 		this.result = result;
 		this.user = user;
+	}
+	
+	public ResponseData (String result, User user, String token) {
+		this.result = result;
+		this.user = user;
+		this.token = "Bearer " + token;
 	}
 	
 	public String getResult () {
@@ -30,5 +37,9 @@ public class ResponseData {
 	
 	public void setUser (User user) {
 		this.user = user;
+	}
+	
+	public String getToken () {
+		return token;
 	}
 }

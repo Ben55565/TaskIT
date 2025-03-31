@@ -3,17 +3,13 @@ package com.taskit.backend.repository;
 import com.taskit.backend.controllers.UserRestController;
 import com.taskit.backend.entity.User;
 import com.taskit.backend.service.UserService;
-import com.taskit.backend.validations.UserValidations;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
 
@@ -26,26 +22,27 @@ public class UserTest {
 	@Autowired
 	private UserService userService;
 	
-	@MockBean
-	private UserRestController controller;
-	
 	@Autowired
-	private MockMvc mockMvc;
+	private UserRestController userRestController;
 	
 	private static Stream<User> correctUserProvider () {
-		return Stream.of(new User("firstName1", "lastName1", "username1", "email1", "+9726565481", "password1"), new User("firstName2", "lastName2", "username2", "email2", "+9726565482", "password2"), new User("firstName3", "lastName3", "username3", "email3", "+9726565483", "password3"));
+		return Stream.of(
+				new User("firstName1", "lastName1", "username1", "email1@gmail1.com", "+9726565481", "password1"),
+				new User("firstName2", "lastName2", "username2", "email2@gmail2.com", "+9726565482", "password2"),
+				new User("firstName3", "lastName3", "username3", "email3@gmail3.com", "+9726565483", "password3"));
 	}
 	
 	private static Stream<User> incorrectUserProvider () {
-		return Stream.of(new User("firstName", "lastName", "username", "email1", "+9726565481", "password1"), new User("firstName", "lastName", "username", "email2", "+9726565482", "password2"), new User("firstName", "lastName", "username", "email3", "+9726565483", "password3"));
+		return Stream.of(
+				new User("firstName", "lastName", "username", "email1", "+9726565481", "password1"),
+				new User("firstName", "lastName", "username", "email2", "+9726565482", "password2"),
+				new User("firstName", "lastName", "username", "email3", "+9726565483", "password3"));
 	}
 	
-	@Transactional
 	@ParameterizedTest
 	@MethodSource ("correctUserProvider")
 	public void userRepository_SaveUser_ShouldReturnTrue (User user) {
 		User savedUser = userService.createOrUpdate(user);
-		
 		assertNotNull(savedUser);
 		assertNotNull(savedUser.getDateTime());
 		assertEquals(user.getFirstName(), savedUser.getFirstName());
@@ -56,28 +53,28 @@ public class UserTest {
 		assertEquals(user.getPassword(), savedUser.getPassword());
 	}
 	
-	@Transactional
 	@ParameterizedTest
-	@ValueSource (strings = {"aaa@", "a.", "ben@.com", "aaa.com"})
+	@ValueSource (strings = {"aaa@", "a.", "ben@.com", "aaa.com", "aaa@gmail.com"})
 	public void userRepository_SaveUserInvalidEmail_ShouldReturnFalse (String email) {
-		assertFalse(UserValidations.isEmailValid(email, userService));
+		assertFalse(userRestController.isEmailValidAndNotTaken(email));
+		
 	}
 	
 	@Test
-	@Transactional
 	public void userRepository_SaveUserInvalidUsernames_ShouldReturnFalse () {
-		User user1 = new User("firstName", "lastName", "username", "email", "+972656548", "password");
-		userService.createOrUpdate(user1);
-		
-		User newUser = new User("firstName", "lastName", "username", "email", "+972656548", "password");
+		User user = new User("firstName", "lastName", "username", "email", "+972656548", "password");
+		userRestController.create(user);
+		User duplicate = new User("firstName", "lastName", "username", "email", "+972656548", "password");
+		assertNotNull(userRestController.create(duplicate).getBody().get("error"));
 		
 	}
 	
 	@ParameterizedTest
 	@MethodSource ("correctUserProvider")
 	public void userRepository_DeleteUser_returnsPossible (User user) {
-		User savedUser = userService.createOrUpdate(user);
-		userService.delete(savedUser.getUsername());
-		assertNull(userService.read(savedUser.getUsername()));
+		userService.createOrUpdate(user);
+		assertNotNull(userService.read(user.getUsername()));
+		userRestController.dropUser(user);
+		assertNull(userService.read(user.getUsername()));
 	}
 }

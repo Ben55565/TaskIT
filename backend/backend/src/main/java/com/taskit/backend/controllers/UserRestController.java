@@ -1,16 +1,15 @@
 package com.taskit.backend.controllers;
 
 import com.taskit.backend.entity.User;
-import com.taskit.backend.responses.ResponseData;
 import com.taskit.backend.service.UserService;
-import com.taskit.backend.validations.UserValidations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping ("/api")
@@ -29,33 +28,38 @@ public class UserRestController {
 		if (userService.read(user.getUsername()) != null) {
 			return ResponseEntity.badRequest().body(Map.of("error", "usernameError"));
 		}
-		else if (! UserValidations.isPhoneNumValid(user.getPhone_number(), userService)) {
+		else if (isPhoneNumValidAndNotTaken(user.getPhone_number())) {
 			return ResponseEntity.badRequest().body(Map.of("error", "phonenumError"));
 		}
-		else if (! UserValidations.isEmailValid(user.getEmail(), userService)) {
+		else if (isEmailValidAndNotTaken(user.getEmail())) {
 			return ResponseEntity.badRequest().body(Map.of("error", "emailError"));
 		}
 		else {
 			user.setDateTime();
 			User savedUser = userService.createOrUpdate(user);
-			return ResponseEntity.ok().body(Map.of("success", "User created successfully", "username", savedUser.getUsername(), "timestamp", savedUser.getDateTime()));
+			return ResponseEntity.ok().body(Map.of("success", "User created successfully", "username", savedUser.getUsername(), "timestamp", savedUser.getDateTime(), "user", savedUser));
 		}
 		
 	}
 	
-	@GetMapping ("/users/{userName}")
-	public ResponseData getUser (@PathVariable String userName, @RequestParam String password) {
-		// NOTE TO SELF: NEED TO MAKE IT CASE SENSITIVE
-		User user = userService.read(userName);
-		if (user == null) {
-			return new ResponseData("No such user exists. Please register.", null);
-		}
-		else {
-			if (Objects.equals(user.getPassword(), password)) {
-				return new ResponseData("Signed in successfully!", user);
-			}
-		}
-		return new ResponseData("Incorrect password.", null);
+	public boolean isPhoneNumValidAndNotTaken (String num) {
+		return ! (isPhoneNumValid(num) && userService.isUserExistsByPhoneNum(num) == null);
+	}
+	
+	public boolean isEmailValidAndNotTaken (String email) {
+		return ! isEmailValid(email) && userService.isUserExistsByEmail(email) != null;
+	}
+	
+	public static boolean isPhoneNumValid (String num) {
+		Pattern pattern = Pattern.compile("\\+\\d(\\d{7})");
+		Matcher matcher = pattern.matcher(num);
+		return matcher.find();
+	}
+	
+	public static boolean isEmailValid (String email) {
+		Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+		Matcher matcher = pattern.matcher(email);
+		return matcher.find();
 	}
 	
 	@GetMapping ("/users")
@@ -80,7 +84,7 @@ public class UserRestController {
 				System.out.println("First name updated to " + newValue);
 			}
 			case "username" -> {
-				if (UserValidations.isUsernameValid(newValue, userService)) {
+				if (userService.read(newValue) != null) {
 					System.out.println("Username already taken.");
 					return;
 				}
@@ -94,12 +98,12 @@ public class UserRestController {
 			case null, default -> System.out.println("No field to update.");
 		}
 		userService.createOrUpdate(user);
-		System.out.println("updated student:\n" + userService.read(user.getUsername()));
+		System.out.println("updated User:\n" + userService.read(user.getUsername()));
 		
 	}
 	
 	@DeleteMapping ("/users/{userName}")
-	private void dropUser (User user) {
+	public void dropUser (User user) {
 		if (userService.read(user.getUsername()) != null) {
 			System.out.println("Deleting User...");
 			userService.delete(user.getUsername());
