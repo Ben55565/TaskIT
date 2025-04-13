@@ -2,7 +2,9 @@ package com.taskit.backend.controllers;
 
 import com.taskit.backend.entity.User;
 import com.taskit.backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -15,12 +17,12 @@ import java.util.regex.Pattern;
 @RequestMapping ("/api")
 public class UserRestController {
 	
-	final private UserService userService;
+	@Autowired
+	private UserService userService;
 	
-	public UserRestController (UserService userService) {
-		this.userService = userService;
-		
-	}
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	
 	@PostMapping ("/users")
 	public ResponseEntity<Map> create (@RequestBody User user) {
@@ -36,6 +38,9 @@ public class UserRestController {
 		}
 		else {
 			user.setDateTime();
+			String rawPassword = user.getPassword();
+			String hashedPassword = passwordEncoder.encode(rawPassword);
+			user.setPassword(hashedPassword);
 			User savedUser = userService.createOrUpdate(user);
 			return ResponseEntity.ok().body(Map.of("success", "User created successfully", "username", savedUser.getUsername(), "timestamp", savedUser.getDateTime(), "user", savedUser));
 		}

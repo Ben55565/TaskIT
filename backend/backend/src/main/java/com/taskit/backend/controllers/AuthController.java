@@ -5,13 +5,14 @@ import com.taskit.backend.requests.LoginRequest;
 import com.taskit.backend.responses.ResponseData;
 import com.taskit.backend.security.JwtUtil;
 import com.taskit.backend.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 
 @RestController
 @RequestMapping ("/api/auth")
@@ -19,6 +20,9 @@ public class AuthController {
 	
 	private final UserService userService;
 	private final JwtUtil jwtUtil;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	public AuthController (UserService userService, JwtUtil jwtUtil) {
 		this.userService = userService;
@@ -33,7 +37,7 @@ public class AuthController {
 			return new ResponseData("No such user exists. Please register.", null, null);
 		}
 		else {
-			if (Objects.equals(user.getPassword(), loginRequest.getPassword())) {
+			if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
 				return new ResponseData("Signed in successfully!", user, jwtUtil.generateToken(user.getUsername()));
 			}
 		}
