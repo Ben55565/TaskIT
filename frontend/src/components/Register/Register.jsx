@@ -32,8 +32,6 @@ const RegisterForm = ({ setAlertInfo }) => {
       phone_number: phoneNum,
       password: password,
     };
-    // Check for json file for configurations, for the axios requests for the backend,
-    // for example - save there the host "http://localhost:8080" instead of dulicating in each request
 
     try {
       await axios.post("http://localhost:8080/api/users", user);
@@ -83,7 +81,7 @@ const RegisterForm = ({ setAlertInfo }) => {
 
   return (
     <div className="form-container">
-      <Typography variant="h4" sx={{ m: 4 }}>
+      <Typography variant="h4" sx={{ m: 4, mt: 20 }}>
         Sign-up
       </Typography>
       <form onSubmit={handleSubmit} action={<Link to="/login" />}>

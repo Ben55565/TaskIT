@@ -7,7 +7,6 @@ import RegisterForm from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import HomePage from "./components/HomePage/HomePage";
 import Header from "./components/Header/Header";
-import Greeting from "./components/Greeting/Greeting";
 import Alerts from "./components/Alerts/Alerts";
 import Footer from "./components/Footer/Footer";
 import Notes from "./components/Notes/Notes";
@@ -75,7 +74,6 @@ function App() {
             user={user}
             setUser={setUser}
           />
-          <Greeting user={user} />
           <AlertDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
           <Routes>
             <Route path="/" element={<HomePage />} />

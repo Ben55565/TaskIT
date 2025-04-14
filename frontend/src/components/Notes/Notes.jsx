@@ -37,7 +37,7 @@ const Notes = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ mt: 20 }}>
       <Grid container spacing={2} justifyContent="center">
         {notes.length !== 0 ? (
           notes.map((note) => (

@@ -74,7 +74,6 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
         startIcon={<LoginIcon />}
         variant="contained"
         href="/login"
-        className="user-buttons"
       >
         Login
       </AccountButton>
@@ -82,7 +81,6 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
         startIcon={<PersonAddIcon />}
         variant="contained"
         href="/register"
-        className="user-buttons"
       >
         Register
       </AccountButton>
@@ -119,6 +117,9 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
     height: 80,
     justifyContent: "center",
     bgcolor: theme.palette.primary.main,
+    elevation: 1,
+    position: "fixed",
+    zIndex: 1000,
   };
 
   const appNameStyle = {

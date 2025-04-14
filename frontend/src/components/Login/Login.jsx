@@ -67,7 +67,7 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
   return (
     <div className="form-container">
       <form autoComplete="off" onSubmit={handleSubmit}>
-        <Typography variant="h4" sx={{ m: 4 }}>
+        <Typography variant="h4" sx={{ m: 4, mt: 20 }}>
           Login
         </Typography>
         <TextField
