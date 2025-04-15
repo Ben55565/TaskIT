@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import API, { setAuthToken } from "../../api/api";
 import { useNavigate } from "react-router-dom";
@@ -65,13 +65,13 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
   };
 
   return (
-    <div className="form-container">
+    <Box className="form-container" sx={{ width: "20%" }}>
       <form autoComplete="off" onSubmit={handleSubmit}>
         <Typography variant="h4" sx={{ m: 4, mt: 20 }}>
           Login
         </Typography>
         <TextField
-          label="User Name"
+          label="Username"
           onChange={(e) => setuserName(e.target.value)}
           required
           variant="outlined"
@@ -106,7 +106,7 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
       <Typography variant="subtitle2" sx={{ m: 4 }}>
         Need an account? <Link to="/register">Register here</Link>
       </Typography>
-    </div>
+    </Box>
   );
 };
 

@@ -11,18 +11,29 @@ import {
   Button,
   Tooltip,
   MenuItem,
+  Switch,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
   NoteAltRounded as NoteAltRoundedIcon,
   Login as LoginIcon,
   PersonAdd as PersonAddIcon,
+  LightMode as LightModeIcon,
+  DarkMode as DarkModeIcon,
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import { AccountButton } from "../AccountButton/AccountButton";
 import { useTheme } from "@mui/material/styles";
 
-const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
+const Header = ({
+  setIsDarkMode,
+  isDarkMode,
+  isLoggedIn,
+  setIsLoggedIn,
+  setAlertInfo,
+  user,
+  setUser,
+}) => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -104,6 +115,10 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
       navigate("/");
       console.log(user);
     }, 3000);
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
   };
 
   const settings = [
@@ -231,6 +246,34 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setAlertInfo, user, setUser }) => {
                 {page.label}
               </Button>
             ))}
+            <Button
+              sx={{
+                justifyContent: "center",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                ml: "80%",
+                mt: 1,
+              }}
+              onClick={toggleTheme}
+            >
+              <Switch
+                checked={isDarkMode}
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "black",
+                    "& + .MuiSwitch-track": {
+                      backgroundColor: "black",
+                    },
+                  },
+                }}
+              />
+              {isDarkMode ? (
+                <LightModeIcon sx={{ color: theme.text.primary }} />
+              ) : (
+                <DarkModeIcon sx={{ color: theme.text.primary }} />
+              )}
+            </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             {isLoggedIn ? loggedInUserView() : notLoggedInView()}

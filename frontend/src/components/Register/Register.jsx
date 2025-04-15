@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TextField, Button, Stack, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { TextField, Button, Stack, Typography, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.css";
 import axios from "axios";
@@ -13,10 +13,12 @@ const RegisterForm = ({ setAlertInfo }) => {
   const [email, setEmail] = useState("");
   const [phoneNum, setphoneNum] = useState("");
   const [password, setPassword] = useState("");
+  const [ConfirmPassword, setConfirmPassword] = useState("");
 
   const [usernameError, setUsernameError] = useState(false);
   const [phoneNumError, setPhoneNumError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const handleSubmit = async (e) => {
     setUsernameError(false);
@@ -79,8 +81,16 @@ const RegisterForm = ({ setAlertInfo }) => {
     }
   };
 
+  useEffect(() => {
+    if (password !== ConfirmPassword) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+  }, [ConfirmPassword, password]);
+
   return (
-    <div className="form-container">
+    <Box className="form-container" sx={{ width: "30%" }}>
       <Typography variant="h4" sx={{ m: 4, mt: 20 }}>
         Sign-up
       </Typography>
@@ -155,6 +165,19 @@ const RegisterForm = ({ setAlertInfo }) => {
           fullWidth
           sx={{ mb: 2 }}
         />
+        <TextField
+          error={passwordError}
+          helperText={passwordError ? "Passwords do not match" : ""}
+          type="password"
+          variant="outlined"
+          color="secondary"
+          label="Confirm Password"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={ConfirmPassword}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
         <Button
           variant="outlined"
           color="secondary"
@@ -167,7 +190,7 @@ const RegisterForm = ({ setAlertInfo }) => {
       <Typography variant="subtitle2" sx={{ m: 4 }}>
         Already have an account? <Link to="/login">Login Here</Link>
       </Typography>
-    </div>
+    </Box>
   );
 };
 

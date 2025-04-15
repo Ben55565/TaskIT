@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 
 import RegisterForm from "./components/Register/Register";
 import Login from "./components/Login/Login";
@@ -11,10 +11,9 @@ import Alerts from "./components/Alerts/Alerts";
 import Footer from "./components/Footer/Footer";
 import Notes from "./components/Notes/Notes";
 import AlertDialog from "./components/AlertDialog/AlertDialog";
+import { lightTheme, darkTheme } from "./theme";
 
 import API, { setAuthToken } from "./api/api";
-
-import { theme } from "./theme";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,11 +62,16 @@ function App() {
     }
   }, []);
 
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <CssBaseline />
       <div className="App">
         <div className="content">
           <Header
+            setIsDarkMode={setIsDarkMode}
+            isDarkMode={isDarkMode}
             isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
             setAlertInfo={setAlertInfo}
