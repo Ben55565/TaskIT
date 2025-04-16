@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping ("/api/auth")
 public class AuthController {
@@ -44,10 +43,10 @@ public class AuthController {
 		return new ResponseData("Incorrect password.", null, null);
 	}
 	
-	@GetMapping("/validate-token")
-	public ResponseEntity<Map<String, Object>> validateToken(@RequestHeader("Authorization") String authHeader) {
+	@GetMapping ("/validate-token")
+	public ResponseEntity<Map<String, Object>> validateToken (@RequestHeader ("Authorization") String authHeader) {
 		Map<String, Object> response = new HashMap<>();
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+		if (authHeader == null || ! authHeader.startsWith("Bearer ")) {
 			response.put("valid", false);
 			return ResponseEntity.ok(response);
 		}

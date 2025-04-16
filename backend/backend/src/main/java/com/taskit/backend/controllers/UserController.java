@@ -23,7 +23,6 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	
 	@PostMapping ("/users")
 	public ResponseEntity<Map> create (@RequestBody User user) {
 		

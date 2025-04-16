@@ -1,9 +1,9 @@
 package com.taskit.backend.repositories;
 
-import com.taskit.backend.entity.Checklist;
+import com.taskit.backend.entity.ChecklistItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChecklistRepository extends JpaRepository<Checklist, Integer> {
+public interface ChecklistItemRepository extends JpaRepository<ChecklistItem, Integer> {
 }

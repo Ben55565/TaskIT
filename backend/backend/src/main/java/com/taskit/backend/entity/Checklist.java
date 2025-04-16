@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Checklist {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "id")
 	private int id;
 	@Column (name = "title")
@@ -18,6 +18,8 @@ public class Checklist {
 	private String content;
 	@Column (name = "create_time")
 	private LocalDateTime dateTime;
+	@Column (name = "username")
+	private String username;
 	
 	public Checklist () {
 	
@@ -32,6 +34,13 @@ public class Checklist {
 		this.title = title;
 		this.content = content;
 		this.dateTime = LocalDateTime.now();
+	}
+	
+	public Checklist (int id, String title, String content, String username) {
+		this.title = title;
+		this.content = content;
+		this.dateTime = LocalDateTime.now();
+		this.username = username;
 	}
 	
 	public int getId () {
@@ -66,8 +75,16 @@ public class Checklist {
 		this.dateTime = dateTime;
 	}
 	
+	public String getUsername () {
+		return username;
+	}
+	
+	public void setUsername (String username) {
+		this.username = username;
+	}
+	
 	@Override
 	public String toString () {
-		return "Checklist{" + "id=" + id + ", title='" + title + '\'' + ", content=" + content + ", dateTime=" + dateTime + '}';
+		return "Checklist{" + "id=" + id + ", title='" + title + '\'' + ", content='" + content + '\'' + ", dateTime=" + dateTime + ", username='" + username + '\'' + '}';
 	}
 }

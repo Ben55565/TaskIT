@@ -11,16 +11,17 @@ const Introduction = () => {
       display="flex"
       flexDirection="row"
       sx={{ width: "95%", height: "100%", mt: 10, minHeight: "60vh" }}
-      boxShadow={5}
+      boxShadow={8}
       alignItems="center"
       justifyContent="center"
     >
       <Box
         sx={{
           justifyContent: "center",
-          alignItems: "left",
+          alignItems: "center",
           display: "flex",
           flexDirection: "column",
+          ml: 30,
           width: "50%",
         }}
       >
@@ -51,18 +52,21 @@ const Introduction = () => {
         </AccountButton>
       </Box>
       <Grow in style={{ transformOrigin: "0 0 0" }} timeout={1000}>
-        <Box
-          component="img"
-          src="/assets/IntroductionImage.png"
-          alt="TaskIt Illustration"
-          sx={{
-            width: "35%",
-            height: "80%",
-            objectFit: "cover",
-            borderRadius: "20px",
-            boxShadow: 3,
-          }}
-        />
+        <Box>
+          <Box
+            component="img"
+            src="/assets/IntroductionImage.png"
+            alt="TaskIt Illustration"
+            sx={{
+              width: "50%",
+              height: "80%",
+              objectFit: "cover",
+              borderRadius: "20px",
+              boxShadow: 3,
+              ml: 20,
+            }}
+          />
+        </Box>
       </Grow>
     </Box>
   );
@@ -94,7 +98,7 @@ const Information = () => {
       display="flex"
       flexDirection="row"
       sx={{ width: "95%", height: "100%", mt: 15, minHeight: "60vh" }}
-      boxShadow={5}
+      boxShadow={8}
       alignItems="center"
       justifyContent="center"
       ref={ref}
@@ -213,7 +217,7 @@ const PlaceHolder = () => {
         minHeight: "60vh",
         mb: 15,
       }}
-      boxShadow={5}
+      boxShadow={8}
       alignItems="center"
       justifyContent="center"
     >

@@ -30,8 +30,9 @@ public class JwtUtil {
 	public boolean validateToken (String token) {
 		try {
 			String extractedUsername = extractUsername(token);
-			return extractedUsername != null && !isTokenExpired(token);
-		} catch (ExpiredJwtException e) {
+			return extractedUsername != null && ! isTokenExpired(token);
+		}
+		catch (ExpiredJwtException e) {
 			return false;
 		}
 	}
@@ -52,7 +53,16 @@ public class JwtUtil {
 		return claims.getExpiration().before(new Date());
 	}
 	
-	public String getTokenRemainingTime(String token) {
+	private Claims getClaims (String token) {
+		try {
+			return Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))).build().parseClaimsJws(token).getBody();
+		}
+		catch (ExpiredJwtException e) {
+			return null;
+		}
+	}
+	
+	public String getTokenRemainingTime (String token) {
 		Claims claims = getClaims(token);
 		if (claims == null) {
 			return "";
@@ -64,17 +74,5 @@ public class JwtUtil {
 		long sec = TimeUnit.MILLISECONDS.toSeconds(remainingMillis) % 60;
 		
 		return min + " Minutes, " + sec + " Seconds - To token expiration";
-	}
-	
-	private Claims getClaims (String token) {
-		try {
-			return Jwts.parserBuilder()
-					.setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
-					.build()
-					.parseClaimsJws(token)
-					.getBody();
-		} catch (ExpiredJwtException e) {
-			return null;
-		}
 	}
 }
