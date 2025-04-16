@@ -95,9 +95,9 @@ function App() {
                 />
               }
             />
-            <Route path="/my-notes" element={<Notes />} />
-            {/* <Route path="/recommendations" element={<h1>recommendations</h1>} />
-            <Route path="/Chat" element={<h1>Chat</h1>} /> */}
+            <Route path="/my-tasks" element={<Notes />} />
+            <Route path="/calendar" element={<h1>calendar</h1>} />
+            {/* <Route path="/Chat" element={<h1>Chat</h1>} /> */}
           </Routes>
           <Alerts alertInfo={alertInfo} />
         </div>

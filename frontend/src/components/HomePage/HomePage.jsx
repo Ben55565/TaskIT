@@ -10,7 +10,10 @@ const Introduction = () => {
     <Box
       display="flex"
       flexDirection="row"
-      sx={{ width: "65%", height: "50%" }}
+      sx={{ width: "95%", height: "100%", mt: 10, minHeight: "60vh" }}
+      boxShadow={5}
+      alignItems="center"
+      justifyContent="center"
     >
       <Box
         sx={{
@@ -36,7 +39,7 @@ const Introduction = () => {
           href="/register"
           sx={{
             m: 0,
-            mt: 10,
+            mt: 5,
             width: "60%",
             height: 50,
             alignItems: "center",
@@ -54,9 +57,8 @@ const Introduction = () => {
           alt="TaskIt Illustration"
           sx={{
             width: "35%",
-            height: "120%",
+            height: "80%",
             objectFit: "cover",
-            ml: 10,
             borderRadius: "20px",
             boxShadow: 3,
           }}
@@ -89,13 +91,12 @@ const Information = () => {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        height: "80%",
-        justifyContent: "space-between",
-      }}
+      display="flex"
+      flexDirection="row"
+      sx={{ width: "95%", height: "100%", mt: 15, minHeight: "60vh" }}
+      boxShadow={5}
+      alignItems="center"
+      justifyContent="center"
       ref={ref}
     >
       <Grow in={visible[0]} style={{ transformOrigin: "0 0 0" }} timeout={500}>
@@ -201,19 +202,38 @@ const Information = () => {
   );
 };
 
+const PlaceHolder = () => {
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      sx={{
+        width: "95%",
+        mt: 15,
+        minHeight: "60vh",
+        mb: 15,
+      }}
+      boxShadow={5}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Typography variant="h4">Placeholder</Typography>
+    </Box>
+  );
+};
+
 const HomePage = () => {
   const boxStyle = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "80vh",
   };
 
   return (
     <>
       <Box sx={boxStyle}>{Introduction()}</Box>
       <Box sx={boxStyle}>{Information()}</Box>
-      <Box sx={boxStyle}></Box>
+      <Box sx={boxStyle}>{PlaceHolder()}</Box>
     </>
   );
 };

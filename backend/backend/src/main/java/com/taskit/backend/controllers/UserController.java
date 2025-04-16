@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping ("/api")
-public class UserRestController {
+public class UserController {
 	
 	@Autowired
 	private UserService userService;

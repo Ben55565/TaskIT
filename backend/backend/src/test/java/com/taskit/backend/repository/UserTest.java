@@ -1,6 +1,6 @@
 package com.taskit.backend.repository;
 
-import com.taskit.backend.controllers.UserRestController;
+import com.taskit.backend.controllers.UserController;
 import com.taskit.backend.entity.User;
 import com.taskit.backend.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class UserTest {
 	private UserService userService;
 	
 	@Autowired
-	private UserRestController userRestController;
+	private UserController userController;
 	
 	private static Stream<User> correctUserProvider () {
 		return Stream.of(
@@ -56,16 +56,16 @@ public class UserTest {
 	@ParameterizedTest
 	@ValueSource (strings = {"aaa@", "a.", "ben@.com", "aaa.com", "aaa@gmail.com"})
 	public void userRepository_SaveUserInvalidEmail_ShouldReturnFalse (String email) {
-		assertFalse(userRestController.isEmailValidAndNotTaken(email));
+		assertFalse(userController.isEmailValidAndNotTaken(email));
 		
 	}
 	
 	@Test
 	public void userRepository_SaveUserInvalidUsernames_ShouldReturnFalse () {
 		User user = new User("firstName", "lastName", "username", "email", "+972656548", "password");
-		userRestController.create(user);
+		userController.create(user);
 		User duplicate = new User("firstName", "lastName", "username", "email", "+972656548", "password");
-		assertNotNull(userRestController.create(duplicate).getBody().get("error"));
+		assertNotNull(userController.create(duplicate).getBody().get("error"));
 		
 	}
 	
@@ -74,7 +74,7 @@ public class UserTest {
 	public void userRepository_DeleteUser_returnsPossible (User user) {
 		userService.createOrUpdate(user);
 		assertNotNull(userService.read(user.getUsername()));
-		userRestController.dropUser(user);
+		userController.dropUser(user);
 		assertNull(userService.read(user.getUsername()));
 	}
 }
