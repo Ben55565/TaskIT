@@ -95,7 +95,7 @@ function App() {
                 />
               }
             />
-            <Route path="/my-tasks" element={<Notes />} />
+            <Route path="/my-tasks" element={<Notes user={user} />} />
             <Route path="/calendar" element={<h1>calendar</h1>} />
             {/* <Route path="/Chat" element={<h1>Chat</h1>} /> */}
           </Routes>

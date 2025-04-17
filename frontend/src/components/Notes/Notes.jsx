@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import Note from "../Note/Note";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -7,34 +6,140 @@ import {
   Dialog,
   Button,
   Snackbar,
-  DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
+  TextField,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
 } from "@mui/material";
 import NotesController from "../NotesController/NotesController";
 import Fade from "@mui/material/Fade";
 import "./Notes.css";
+import CheckList from "../CheckList/CheckList";
 
 // in the future use:
 // NotesDrawer - for controlling catarogies of the notes
 // CheckList - for Creating notes that are checklists
 
-const Notes = () => {
-  const [notes, setNotes] = useState([
-    { id: 1, title: "Note 1", content: "This is the first note" },
-  ]);
+const Notes = ({ user }) => {
+  const [tasks, setTasks] = useState([]);
+  const [notes, setNotes] = useState([]);
   const [newNoteFormActive, setNewNoteFormActive] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [showSnackBar, setShowSnackBar] = useState(false);
+
+  const [body, setBody] = useState("");
+  const [title, setTitle] = useState("");
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && body.trim() !== "") {
+      e.preventDefault();
+      setTasks([...tasks, { text: body, checked: false }]);
+      setBody("");
+    }
+  };
+
+  const handleDiscard = () => {
+    setNewNoteFormActive(false);
+    setBody("");
+    setTitle("");
+    setTasks([]);
+  };
+
+  const handleSetTitle = (e) => {
+    setTitle(e.target.value);
+  };
 
   const handleDelete = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
   };
 
-  const handleEdit = (id) => {
-    console.log(`Edit note with ID: ${id}`);
+  const handleAddTaskToNote = (noteId, taskText) => {
+    if (!taskText.trim()) return;
+
+    const updatedNotes = notes.map((note) => {
+      if (note.id === noteId) {
+        const updatedTasks = [
+          ...note.tasks,
+          { text: taskText.trim(), checked: false },
+        ];
+        return { ...note, tasks: updatedTasks };
+      }
+      return note;
+    });
+
+    setNotes(updatedNotes);
   };
+
+  const toggleTask = (noteId, taskIndex) => {
+    const updatedNotes = notes.map((note) => {
+      if (note.id === noteId) {
+        const updatedTasks = [...note.tasks];
+        const [toggledTask] = updatedTasks.splice(taskIndex, 1);
+        toggledTask.checked = !toggledTask.checked;
+
+        if (toggledTask.checked) {
+          updatedTasks.push(toggledTask);
+        } else {
+          updatedTasks.unshift(toggledTask);
+        }
+
+        return { ...note, tasks: updatedTasks };
+      }
+      return note;
+    });
+
+    setNotes(updatedNotes);
+  };
+
+  const handleAddNote = (title, body) => {
+    let updatedTasks = [...tasks];
+
+    if (body.trim() !== "") {
+      updatedTasks.push({ text: body.trim(), checked: false });
+    }
+    const newNote = {
+      id: notes.length + 1,
+      title: title,
+      tasks: updatedTasks,
+    };
+    setNotes([...notes, newNote]);
+    setShowSnackBar(true);
+    setNewNoteFormActive(false);
+    setTitle("");
+    setBody("");
+    setTasks([]);
+  };
+
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("guest_notes");
+    const savedTimestamp = localStorage.getItem("guest_notes_timestamp");
+
+    if (savedNotes && savedTimestamp) {
+      const now = Date.now();
+      const age = now - parseInt(savedTimestamp, 10);
+      const lifeTime = 12 * 60 * 60 * 1000;
+
+      if (age < lifeTime) {
+        setNotes(JSON.parse(savedNotes));
+      } else {
+        localStorage.removeItem("guest_notes");
+        localStorage.removeItem("guest_notes_timestamp");
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem("guest_notes", JSON.stringify(notes));
+    localStorage.setItem("guest_notes_timestamp", Date.now());
+  }, [notes, isLoaded]);
 
   return (
     <Box sx={{ mt: 20 }}>
@@ -42,7 +147,13 @@ const Notes = () => {
         {notes.length !== 0 ? (
           notes.map((note) => (
             <Grid item key={note.id}>
-              <Note note={note} onDelete={handleDelete} onEdit={handleEdit} />
+              <CheckList
+                key={note.id}
+                note={note}
+                onDelete={handleDelete}
+                onToggleTask={toggleTask}
+                onAddTask={handleAddTaskToNote}
+              />
             </Grid>
           ))
         ) : (
@@ -68,22 +179,64 @@ const Notes = () => {
         }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <React.Fragment>
-          <DialogTitle>{"Create new note"}</DialogTitle>
+        <Box
+          sx={{
+            width: 500,
+            height: 300,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <TextField
+            id="standard-basic"
+            label="Title"
+            variant="standard"
+            sx={{ mt: 2, mb: 2, width: "50%", ml: "25%" }}
+            value={title}
+            onChange={handleSetTitle}
+          />
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              body text here
-            </DialogContentText>
+            <TextField
+              label="Add new tasks here.."
+              variant="outlined"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              onKeyDown={handleKeyDown}
+              sx={{ width: "100%", mb: 2 }}
+            />
+            <List>
+              {tasks.map((task, index) => (
+                <ListItem key={index} disablePadding>
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={task.checked}
+                      onChange={() => toggleTask(index)}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        sx={{
+                          textDecoration: task.checked
+                            ? "line-through"
+                            : "none",
+                        }}
+                      >
+                        {task.text}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
           </DialogContent>
           <DialogActions>
             <Grid container spacing={2} justifyContent="center">
-              <Button onClick={() => setShowSnackBar(true)}>Add</Button>
-              <Button onClick={() => setNewNoteFormActive(false)}>
-                Discard
-              </Button>
+              <Button onClick={() => handleAddNote(title, body)}>Add</Button>
+              <Button onClick={() => handleDiscard()}>Discard</Button>
             </Grid>
           </DialogActions>
-        </React.Fragment>
+        </Box>
       </Dialog>
       <Snackbar
         open={showSnackBar}

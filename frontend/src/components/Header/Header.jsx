@@ -315,7 +315,7 @@ const Header = ({
           </Toolbar>
         </Container>
       </AppBar>
-      <Box sx={{ height: 60 }} />
+      <Box sx={{ height: 80 }} />
     </>
   );
 };

@@ -10,7 +10,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const Note = ({ note, onDelete, onEdit }) => {
+const Note = ({ note, onDelete }) => {
   return (
     <Card sx={{ maxWidth: 345, margin: "10px" }}>
       <CardContent>
@@ -22,7 +22,7 @@ const Note = ({ note, onDelete, onEdit }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton onClick={() => onEdit(note.id)} color="primary">
+        <IconButton color="primary">
           <EditIcon />
         </IconButton>
         <IconButton onClick={() => onDelete(note.id)} color="secondary">
