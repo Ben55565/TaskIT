@@ -14,8 +14,6 @@ public class Checklist {
 	private int id;
 	@Column (name = "title")
 	private String title;
-	@Column (name = "content")
-	private String content;
 	@Column (name = "create_time")
 	private LocalDateTime dateTime;
 	@Column (name = "username")
@@ -30,15 +28,13 @@ public class Checklist {
 		this.dateTime = LocalDateTime.now();
 	}
 	
-	public Checklist (int id, String title, String content) {
+	public Checklist (int id, String title) {
 		this.title = title;
-		this.content = content;
 		this.dateTime = LocalDateTime.now();
 	}
 	
-	public Checklist (int id, String title, String content, String username) {
+	public Checklist (int id, String title, String username) {
 		this.title = title;
-		this.content = content;
 		this.dateTime = LocalDateTime.now();
 		this.username = username;
 	}
@@ -59,14 +55,6 @@ public class Checklist {
 		this.title = title;
 	}
 	
-	public String getContent () {
-		return content;
-	}
-	
-	public void setContent (String content) {
-		this.content = content;
-	}
-	
 	public LocalDateTime getDateTime () {
 		return dateTime;
 	}
@@ -85,6 +73,6 @@ public class Checklist {
 	
 	@Override
 	public String toString () {
-		return "Checklist{" + "id=" + id + ", title='" + title + '\'' + ", content='" + content + '\'' + ", dateTime=" + dateTime + ", username='" + username + '\'' + '}';
+		return "Checklist{" + "id=" + id + ", title='" + title + '\'' + ", dateTime=" + dateTime + ", username='" + username + '\'' + '}';
 	}
 }

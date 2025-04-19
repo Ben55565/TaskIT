@@ -14,29 +14,33 @@ public class ChecklistItem {
 	private int id;
 	@Column (name = "task_id")
 	private int taskId;
-	@Column (name = "data")
-	private String data;
+	@Column (name = "text")
+	private String text;
 	@Column (name = "create_time")
 	private LocalDateTime dateTime;
+	@Column (name = "checked")
+	private boolean checked;
 	
 	public ChecklistItem () {
 	}
 	
-	public ChecklistItem (String data) {
-		this.data = data;
+	public ChecklistItem (String text) {
+		this.text = text;
+		this.checked = false;
 	}
 	
-	public ChecklistItem (String data, int taskId) {
-		this.data = data;
+	public ChecklistItem (String text, int taskId) {
+		this.text = text;
 		this.taskId = taskId;
+		this.checked = false;
 	}
 	
-	public String getData () {
-		return data;
+	public String getText () {
+		return text;
 	}
 	
-	public void setData (String data) {
-		this.data = data;
+	public void setText (String text) {
+		this.text = text;
 	}
 	
 	public int getId () {
@@ -59,8 +63,16 @@ public class ChecklistItem {
 		this.taskId = taskId;
 	}
 	
+	public boolean isChecked () {
+		return checked;
+	}
+	
+	public void setChecked (boolean checked) {
+		this.checked = checked;
+	}
+	
 	@Override
 	public String toString () {
-		return "ChecklistItem{" + "id=" + id + '\'' + ", data='" + data + '\'' + ", dateTime=" + dateTime + '}';
+		return "ChecklistItem{" + "id=" + id + '\'' + ", data='" + text + '\'' + ", dateTime=" + dateTime + '}';
 	}
 }

@@ -33,7 +33,15 @@ public class SecurityConfig {
 					config.setAllowCredentials(true);
 					return config;
 				})).csrf(AbstractHttpConfigurer::disable)  // Disable CSRF for testing (enable in production)
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll().requestMatchers("/api/tasks").permitAll().requestMatchers("/api/list-items").permitAll().requestMatchers("/api/users/**").authenticated().requestMatchers("/api/auth/login", "/api/auth/validate-token").permitAll().anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+						.requestMatchers("/api/tasks").permitAll()
+						.requestMatchers("/api/list-items").permitAll()
+						.requestMatchers("/api/checklists").permitAll()
+						.requestMatchers("/api/users/**").authenticated()
+						.requestMatchers("/api/auth/login", "/api/auth/validate-token").permitAll()
+						.anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		
 		return http.build();
 	}

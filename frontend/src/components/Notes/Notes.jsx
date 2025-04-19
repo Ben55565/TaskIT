@@ -19,6 +19,7 @@ import NotesController from "../NotesController/NotesController";
 import Fade from "@mui/material/Fade";
 import "./Notes.css";
 import CheckList from "../CheckList/CheckList";
+import axios from "axios";
 
 // in the future use:
 // NotesDrawer - for controlling catarogies of the notes
@@ -113,33 +114,74 @@ const Notes = ({ user }) => {
     setTitle("");
     setBody("");
     setTasks([]);
+
+    if (user) {
+      axios.post("http://localhost:8080/api/checklists", {
+        checklist: {
+          username: user.username,
+          title: title,
+        },
+        tasks: updatedTasks.map((task) => ({
+          text: task.text,
+          checked: task.checked,
+        })),
+      });
+    } else {
+      localStorage.setItem("guest_notes", JSON.stringify([...notes, newNote]));
+      localStorage.setItem("guest_notes_timestamp", Date.now());
+    }
   };
 
   useEffect(() => {
-    const savedNotes = localStorage.getItem("guest_notes");
-    const savedTimestamp = localStorage.getItem("guest_notes_timestamp");
+    const loadNotes = async () => {
+      if (user) {
+        try {
+          const { data } = await axios.get(
+            "http://localhost:8080/api/checklists",
+            {
+              params: { username: user.username },
+            }
+          );
 
-    if (savedNotes && savedTimestamp) {
-      const now = Date.now();
-      const age = now - parseInt(savedTimestamp, 10);
-      const lifeTime = 12 * 60 * 60 * 1000;
+          const transformedNotes = data.map((item) => ({
+            id: item.checklist.id,
+            title: item.checklist.title,
+            tasks: item.tasks ?? [],
+          }));
 
-      if (age < lifeTime) {
-        setNotes(JSON.parse(savedNotes));
+          setNotes(transformedNotes);
+        } catch (error) {
+          console.error("Failed to fetch checklists:", error);
+        }
       } else {
-        localStorage.removeItem("guest_notes");
-        localStorage.removeItem("guest_notes_timestamp");
+        const savedNotes = localStorage.getItem("guest_notes");
+        const savedTimestamp = localStorage.getItem("guest_notes_timestamp");
+
+        if (savedNotes && savedTimestamp) {
+          const now = Date.now();
+          const age = now - parseInt(savedTimestamp, 10);
+          const oneDay = 24 * 60 * 60 * 1000;
+
+          if (age < oneDay) {
+            setNotes(JSON.parse(savedNotes));
+          } else {
+            localStorage.removeItem("guest_notes");
+            localStorage.removeItem("guest_notes_timestamp");
+          }
+        }
       }
-    }
-    setIsLoaded(true);
-  }, []);
+      setIsLoaded(true);
+    };
+
+    loadNotes();
+  }, [user]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || user) return;
 
     localStorage.setItem("guest_notes", JSON.stringify(notes));
     localStorage.setItem("guest_notes_timestamp", Date.now());
-  }, [notes, isLoaded]);
+  }, [notes, isLoaded, user]);
 
   return (
     <Box sx={{ mt: 20 }}>
@@ -154,6 +196,7 @@ const Notes = ({ user }) => {
                 onToggleTask={toggleTask}
                 onAddTask={handleAddTaskToNote}
               />
+              {console.log(note)}
             </Grid>
           ))
         ) : (
