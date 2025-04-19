@@ -113,7 +113,6 @@ const Header = ({
       window.location.reload();
       setIsLoggedIn(false);
       navigate("/");
-      console.log(user);
     }, 3000);
   };
 

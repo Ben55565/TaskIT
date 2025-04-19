@@ -30,12 +30,10 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       setAuthToken(token);
-      console.log(token);
       API.get("/auth/validate-token", {
         headers: { Authorization: token },
       })
         .then((res) => {
-          console.log(res);
           if (res.data.valid) {
             setIsLoggedIn(true);
             if (res.data.user) {

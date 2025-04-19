@@ -20,6 +20,7 @@ import Fade from "@mui/material/Fade";
 import "./Notes.css";
 import CheckList from "../CheckList/CheckList";
 import axios from "axios";
+import API, { setAuthToken } from "../../api/api";
 
 // in the future use:
 // NotesDrawer - for controlling catarogies of the notes
@@ -57,6 +58,17 @@ const Notes = ({ user }) => {
 
   const handleDelete = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
+    if (user) {
+      if (localStorage.getItem("token") !== null) {
+        setAuthToken(localStorage.getItem("token").substring(7));
+      }
+      try {
+        API.delete(`/checklists/${id}`);
+      } catch (error) {
+        console.error("Failed to update task:", error);
+        window.location.reload();
+      }
+    }
   };
 
   const handleAddTaskToNote = (noteId, taskText) => {
@@ -68,6 +80,20 @@ const Notes = ({ user }) => {
           ...note.tasks,
           { text: taskText.trim(), checked: false },
         ];
+        if (user) {
+          if (localStorage.getItem("token") !== null) {
+            setAuthToken(localStorage.getItem("token").substring(7));
+          }
+          try {
+            API.post(`/checklists/${noteId}`, {
+              checklistId: note.id,
+              newTask: taskText,
+            });
+          } catch (error) {
+            console.error("Failed to update task:", error);
+            window.location.reload();
+          }
+        }
         return { ...note, tasks: updatedTasks };
       }
       return note;
@@ -87,6 +113,17 @@ const Notes = ({ user }) => {
           updatedTasks.push(toggledTask);
         } else {
           updatedTasks.unshift(toggledTask);
+        }
+        if (user) {
+          if (localStorage.getItem("token") !== null) {
+            setAuthToken(localStorage.getItem("token").substring(7));
+          }
+          try {
+            API.put(`/checklists/${noteId}`, toggledTask);
+          } catch (error) {
+            console.error("Failed to update task:", error);
+            window.location.reload();
+          }
         }
 
         return { ...note, tasks: updatedTasks };
@@ -116,7 +153,10 @@ const Notes = ({ user }) => {
     setTasks([]);
 
     if (user) {
-      axios.post("http://localhost:8080/api/checklists", {
+      if (localStorage.getItem("token") !== null) {
+        setAuthToken(localStorage.getItem("token").substring(7));
+      }
+      API.post("/checklists", {
         checklist: {
           username: user.username,
           title: title,
@@ -135,13 +175,11 @@ const Notes = ({ user }) => {
   useEffect(() => {
     const loadNotes = async () => {
       if (user) {
+        setAuthToken(localStorage.getItem("token").substring(7));
         try {
-          const { data } = await axios.get(
-            "http://localhost:8080/api/checklists",
-            {
-              params: { username: user.username },
-            }
-          );
+          const { data } = await API.get("/checklists", {
+            params: { username: user.username },
+          });
 
           const transformedNotes = data.map((item) => ({
             id: item.checklist.id,
@@ -152,6 +190,7 @@ const Notes = ({ user }) => {
           setNotes(transformedNotes);
         } catch (error) {
           console.error("Failed to fetch checklists:", error);
+          window.location.reload();
         }
       } else {
         const savedNotes = localStorage.getItem("guest_notes");
@@ -196,7 +235,6 @@ const Notes = ({ user }) => {
                 onToggleTask={toggleTask}
                 onAddTask={handleAddTaskToNote}
               />
-              {console.log(note)}
             </Grid>
           ))
         ) : (

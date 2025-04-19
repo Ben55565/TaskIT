@@ -38,7 +38,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 						.requestMatchers("/api/tasks").permitAll()
 						.requestMatchers("/api/list-items").permitAll()
-						.requestMatchers("/api/checklists").permitAll()
+						.requestMatchers("/api/checklists/**").authenticated()
 						.requestMatchers("/api/users/**").authenticated()
 						.requestMatchers("/api/auth/login", "/api/auth/validate-token").permitAll()
 						.anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

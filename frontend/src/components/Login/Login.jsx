@@ -31,7 +31,6 @@ const Login = ({ setIsLoggedIn, setAlertInfo, setUser, user }) => {
           username: userName,
           password: password,
         });
-        console.log(response);
 
         if (response.data.result === "Signed in successfully!") {
           const { token } = response.data;
