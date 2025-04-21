@@ -73,6 +73,6 @@ public class ChecklistItem {
 	
 	@Override
 	public String toString () {
-		return "ChecklistItem{" + "id=" + id + '\'' + ", data='" + text + '\'' + ", dateTime=" + dateTime + '}';
+		return "ChecklistItem{" + "id=" + id + ", taskId=" + taskId + ", text='" + text + '\'' + ", dateTime=" + dateTime + ", checked=" + checked + '}';
 	}
 }

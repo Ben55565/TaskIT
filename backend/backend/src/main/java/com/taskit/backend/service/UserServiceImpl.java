@@ -2,6 +2,7 @@ package com.taskit.backend.service;
 
 import com.taskit.backend.entity.User;
 import com.taskit.backend.repositories.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,19 @@ public class UserServiceImpl implements UserService {
 		this.userRepository = userRepository;
 	}
 	
+	@Transactional
 	@Override
 	public User createOrUpdate (User user) {
-		return userRepository.save(user);
+		User saved = userRepository.save(user);
+		userRepository.flush();
+		return saved;
 	}
 	
+	@Transactional
 	@Override
 	public void delete (String username) {
 		userRepository.deleteById(username);
+		userRepository.flush();
 	}
 	
 	@Override

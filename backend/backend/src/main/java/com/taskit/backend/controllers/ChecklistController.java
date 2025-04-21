@@ -4,6 +4,7 @@ import com.taskit.backend.entity.Checklist;
 import com.taskit.backend.entity.ChecklistItem;
 import com.taskit.backend.responses.ChecklistResponse;
 import com.taskit.backend.responses.newTaskResponse;
+import com.taskit.backend.responses.updateTaskResponse;
 import com.taskit.backend.service.ChecklistItemService;
 import com.taskit.backend.service.ChecklistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,16 +54,16 @@ public class ChecklistController {
 			item.setDateTime(LocalDateTime.now());
 			item.setTaskId(createdCL.getId());
 			checklistItemService.createOrUpdate(item);
-			System.out.println(item);
 		});
-		System.out.println(cl);
 		return ResponseEntity.ok("Saved the checklist successfully");
 	}
 	
 	@PutMapping("/{noteId}")
-	public ResponseEntity<String> updateCheckedTask(@PathVariable int noteId, @RequestBody ChecklistItem task) {
-		checklistItemService.createOrUpdate(task);
-		
+	public ResponseEntity<String> updateCheckedTask(@PathVariable int noteId, @RequestBody updateTaskResponse task) {
+		ChecklistItem item = task.getTask();
+		item.setTaskId(task.getChecklistId());
+		item.setDateTime(LocalDateTime.now());
+		checklistItemService.createOrUpdate(item);
 		return ResponseEntity.ok("Updated the task!");
 	
 	}
@@ -77,7 +78,7 @@ public class ChecklistController {
 	}
 	
 	@DeleteMapping("/{noteId}")
-	public ResponseEntity<String> updateCheckedTask(@PathVariable int noteId) {
+	public ResponseEntity<String> deleteChecklist(@PathVariable int noteId) {
 		checklistService.delete(noteId);
 		
 		return ResponseEntity.ok("Deleted the checklist");

@@ -60,7 +60,14 @@ function App() {
     }
   }, []);
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", isDarkMode);
+  }, [isDarkMode]);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>

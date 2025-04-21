@@ -19,7 +19,6 @@ import NotesController from "../NotesController/NotesController";
 import Fade from "@mui/material/Fade";
 import "./Notes.css";
 import CheckList from "../CheckList/CheckList";
-import axios from "axios";
 import API, { setAuthToken } from "../../api/api";
 
 // in the future use:
@@ -98,8 +97,10 @@ const Notes = ({ user }) => {
       }
       return note;
     });
-
     setNotes(updatedNotes);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const toggleTask = (noteId, taskIndex) => {
@@ -119,7 +120,10 @@ const Notes = ({ user }) => {
             setAuthToken(localStorage.getItem("token").substring(7));
           }
           try {
-            API.put(`/checklists/${noteId}`, toggledTask);
+            API.put(`/checklists/${noteId}`, {
+              checklistId: note.id,
+              task: toggledTask,
+            });
           } catch (error) {
             console.error("Failed to update task:", error);
             window.location.reload();
@@ -130,7 +134,6 @@ const Notes = ({ user }) => {
       }
       return note;
     });
-
     setNotes(updatedNotes);
   };
 
@@ -170,6 +173,9 @@ const Notes = ({ user }) => {
       localStorage.setItem("guest_notes", JSON.stringify([...notes, newNote]));
       localStorage.setItem("guest_notes_timestamp", Date.now());
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   useEffect(() => {
